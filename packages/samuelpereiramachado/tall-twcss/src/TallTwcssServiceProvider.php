@@ -11,7 +11,11 @@ class TallTwcssServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'tall-twcss');
+
         $this->registerRoutes();
+
+        Blade::component('tall-twcss::components.tall-twcss', 'tall-twcss');
     }
 
     protected function registerRoutes()

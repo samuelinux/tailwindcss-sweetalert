@@ -1,5 +1,11 @@
-<div x-data="{
-    init() {
+@once
+@assets
+<script src="{{ route('tall-alert.assets.js') }}"></script>
+@endassets
+@endonce
+
+<div x-data x-init="
+    $el.__tallAlertInitialized || (() => {
         window.addEventListener('tall-alert:alert', event => {
             const data = event.detail[0];
             Swal.fire({
@@ -13,7 +19,7 @@
         window.addEventListener('tall-alert:confirm', event => {
             const data = event.detail[0];
             const componentId = data.componentId;
-            
+
             Swal.fire({
                 title: data.title,
                 text: data.message,
@@ -35,7 +41,6 @@
                 }
             });
         });
-    }
-}">
-    <script src="{{ route('tall-alert.assets.js') }}"></script>
-</div>
+        $el.__tallAlertInitialized = true;
+    })()
+"></div>
