@@ -81,6 +81,10 @@ class InjectAssets
             cancelButtonText: 'Cancelar'
         }, data.options || {})).then(function(result) {
             if (result.isConfirmed) {
+                if (!data.action || !data.action.method) {
+                    console.error('[tailwindcss-sweetalert] confirm: "action.method" é obrigatório.');
+                    return;
+                }
                 var component = Livewire.find(componentId);
                 if (component) {
                     if (data.action.params) {

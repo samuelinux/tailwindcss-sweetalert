@@ -20,11 +20,13 @@ class TailwindcssSweetalertServiceProvider extends ServiceProvider
 
     protected function registerRoutes()
     {
-        Route::get('/tailwindcss-sweetalert/css', [AssetController::class, 'css'])
-            ->name('tailwindcss-sweetalert.css');
+        Route::middleware([])->group(function () {
+            Route::get('/tailwindcss-sweetalert/css', [AssetController::class, 'css'])
+                ->name('tailwindcss-sweetalert.css');
 
-        Route::get('/tailwindcss-sweetalert/js', [AssetController::class, 'js'])
-            ->name('tailwindcss-sweetalert.js');
+            Route::get('/tailwindcss-sweetalert/js', [AssetController::class, 'js'])
+                ->name('tailwindcss-sweetalert.js');
+        });
     }
 
     protected function registerMiddleware()
