@@ -9,10 +9,11 @@ Pacote Laravel que injeta automaticamente **TailwindCSS** e **SweetAlert2** em t
 
 ## ✨ Funcionalidades
 
-- **TailwindCSS v2.2** — injetado inline antes de `</head>`
-- **SweetAlert2** — injetado automaticamente antes de `</body>`
-- **Macros Livewire** — `$this->alert()` e `$this->confirm()` disponíveis em qualquer componente
-- **Zero configuração** — sem Vite, sem NPM, sem CDN, sem Blade components manuais
+- **TailwindCSS v2.2** — injetado via `<link>` com cache de 1 ano
+- **SweetAlert2** — injetado via `<script src>` com cache de 1 ano
+- **Macros Livewire** — `$this->alert()` e `$this->confirm()` em qualquer componente
+- **Zero configuração** — sem Vite, sem NPM, sem CDN, sem tags manuais
+- **Performance otimizada** — assets cacheados pelo browser após primeira visita
 - **100% encapsulado** — todos os assets ficam no `vendor/`
 
 ---
@@ -71,12 +72,12 @@ public function delete($id)
 
 ## ⚙️ Como funciona
 
-O pacote registra um **middleware global** que intercepta toda resposta HTML:
+O pacote registra um **middleware global** que intercepta toda resposta HTML e injeta automaticamente:
 
-1. Injeta `<style>` com TailwindCSS antes de `</head>`
-2. Injeta `<script>` com SweetAlert2 + event listeners antes de `</body>`
+1. `<link rel="stylesheet" href="/tailwindcss-sweetalert/css">` antes de `</head>`
+2. `<script src="/tailwindcss-sweetalert/js">` + event listeners antes de `</body>`
 
-Não é necessário adicionar nenhuma tag ou componente manualmente nos layouts.
+Os assets são servidos com `Cache-Control: max-age=31536000, immutable` — ou seja, o browser baixa **uma única vez** e cacheia por 1 ano.
 
 ---
 
@@ -85,12 +86,15 @@ Não é necessário adicionar nenhuma tag ou componente manualmente nos layouts.
 ```
 ├── composer.json
 ├── resources/
-│   ├── css/tailwind.css              # TailwindCSS v2.2 compilado
-│   └── js/sweetalert2.all.min.js     # SweetAlert2 bundled
+│   ├── css/tailwind.css                  # TailwindCSS v2.2 compilado
+│   └── js/sweetalert2.all.min.js         # SweetAlert2 bundled
 └── src/
     ├── TailwindcssSweetalertServiceProvider.php
-    └── Http/Middleware/
-        └── InjectAssets.php          # Middleware de auto-injeção
+    └── Http/
+        ├── Controllers/
+        │   └── AssetController.php       # Serve assets com cache 1 ano
+        └── Middleware/
+            └── InjectAssets.php          # Auto-injeta <link> e <script>
 ```
 
 ---

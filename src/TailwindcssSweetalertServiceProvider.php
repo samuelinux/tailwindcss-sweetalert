@@ -3,16 +3,28 @@
 namespace SamuelPereiraMachado\TailwindcssSweetalert;
 
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Component;
+use SamuelPereiraMachado\TailwindcssSweetalert\Http\Controllers\AssetController;
 use SamuelPereiraMachado\TailwindcssSweetalert\Http\Middleware\InjectAssets;
 
 class TailwindcssSweetalertServiceProvider extends ServiceProvider
 {
     public function boot()
     {
+        $this->registerRoutes();
         $this->registerMiddleware();
         $this->registerMacros();
+    }
+
+    protected function registerRoutes()
+    {
+        Route::get('/tailwindcss-sweetalert/css', [AssetController::class, 'css'])
+            ->name('tailwindcss-sweetalert.css');
+
+        Route::get('/tailwindcss-sweetalert/js', [AssetController::class, 'js'])
+            ->name('tailwindcss-sweetalert.js');
     }
 
     protected function registerMiddleware()

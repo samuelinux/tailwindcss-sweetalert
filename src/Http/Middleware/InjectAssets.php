@@ -36,27 +36,23 @@ class InjectAssets
 
     protected function injectCss(string $content): string
     {
-        $cssPath = __DIR__ . '/../../../resources/css/tailwind.css';
-
-        if (! file_exists($cssPath) || ! str_contains($content, '</head>')) {
+        if (! str_contains($content, '</head>')) {
             return $content;
         }
 
-        $css = file_get_contents($cssPath);
-        $styleTag = "\n<style>{$css}</style>\n";
+        $cssUrl = route('tailwindcss-sweetalert.css');
+        $linkTag = "\n<link rel=\"stylesheet\" href=\"{$cssUrl}\">\n";
 
-        return str_replace('</head>', $styleTag . '</head>', $content);
+        return str_replace('</head>', $linkTag . '</head>', $content);
     }
 
     protected function injectJs(string $content): string
     {
-        $jsPath = __DIR__ . '/../../../resources/js/sweetalert2.all.min.js';
-
-        if (! file_exists($jsPath) || ! str_contains($content, '</body>')) {
+        if (! str_contains($content, '</body>')) {
             return $content;
         }
 
-        $js = file_get_contents($jsPath);
+        $jsUrl = route('tailwindcss-sweetalert.js');
 
         $alertListener = <<<'JS'
 <script>
@@ -102,7 +98,7 @@ class InjectAssets
 </script>
 JS;
 
-        $scriptTag = "\n<script>{$js}</script>\n{$alertListener}\n";
+        $scriptTag = "\n<script src=\"{$jsUrl}\"></script>\n{$alertListener}\n";
 
         return str_replace('</body>', $scriptTag . '</body>', $content);
     }
